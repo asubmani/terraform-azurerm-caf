@@ -1,4 +1,13 @@
 
+module "packer_mi" {
+  source              = "./modules/shared_image_gallery/packer"
+  for_each            = try(local.shared_services.packer_mi, {})
+  global_settings     = local.global_settings
+  settings            = each.value
+  resource_group_name = module.resource_groups[each.value.resource_group_key].name
+  location            = lookup(each.value, "region", null) == null ? module.resource_groups[each.value.resource_group_key].location : local.global_settings.regions[each.value.region]
+}
+
 # CAF naming for Resources
 resource "azurecaf_name" "sig_name" {
   for_each      = try(local.shared_services.shared_image_gallery.galleries, {})

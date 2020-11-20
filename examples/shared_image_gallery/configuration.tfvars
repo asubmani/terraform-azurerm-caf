@@ -9,30 +9,59 @@ resource_groups = {
   sig = {
     name = "sig"
   }
+  packer_vm = {
+    name = "packer_vm"
+  }
+}
+
+shared_image_gallery = {
+  galleries = {
+    gallery1 = {
+      name               = "test1"
+      resource_group_key = "sig"
+      description        = " "
+    }
+  }
+
+  image_definition = {
+    image1 = {
+      name               = "image1"
+      gallery_key        = "gallery1"
+      resource_group_key = "sig"
+      os_type            = "Linux"
+      publisher          = "MyCompany"
+      offer              = "WebServer"
+      sku                = "2020.1"
+    }
+  }
 }
 
 keyvaults = {
   packer_client = {
-    name                = "packer"
-    resource_group_key  = "sig"
-    sku_name            = "standard"
-    soft_delete_enabled = true
-    tags = {
-      tfstate = "level2"
-    }
+    name                   = "packer"
+    resource_group_key     = "sig"
+    sku_name               = "standard"
+    soft_delete_enabled    = true
+    enabled_for_deployment = true
     creation_policies = {
       logged_in_user = {
-        # if the key is set to "logged_in_user" add the user running terraform in the keyvault policy
-        # More examples in /examples/keyvault
-        secret_permissions = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+        certificate_permissions = ["Get", "List", "Update", "Create", "Import", "Delete", "Purge", "Recover"]
+        secret_permissions      = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
       }
     }
   }
 }
 
+#####################################################################################
+# Use the following Blocks to Authenticate Packer using a Azure AD Service Principal
+# Ref : https://www.packer.io/docs/builders/azure#azure-active-directory-service-principal
+
+
+
 keyvault_access_policies_azuread_apps = {
   packer_client = {
     packer_client = {
+      #
       azuread_app_key    = "packer_client"
       secret_permissions = ["Set", "Get", "List", "Delete"]
     }
@@ -77,27 +106,7 @@ role_mapping = {
   }
 }
 
-shared_image_gallery = {
-  galleries = {
-    gallery1 = {
-      name               = "test1"
-      resource_group_key = "sig"
-      description        = " "
-    }
-  }
-
-  image_definition = {
-    image1 = {
-      name               = "image1"
-      gallery_key        = "gallery1"
-      resource_group_key = "sig"
-      os_type            = "Linux"
-      publisher          = "MyCompany"
-      offer              = "WebServer"
-      sku                = "2020.1"
-    }
-  }
-}
+########################################################################################
 
 packer = {
   build1 = {

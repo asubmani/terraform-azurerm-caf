@@ -190,3 +190,7 @@ variable shared_image_gallery {
 variable packer {
   default = {}
 }
+
+variable packer_mi {
+  default = {}
+}
