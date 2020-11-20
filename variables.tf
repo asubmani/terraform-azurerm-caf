@@ -191,6 +191,3 @@ variable packer {
   default = {}
 }
 
-variable packer_mi {
-  default = {}
-}

@@ -1,13 +1,4 @@
 
-module "packer_mi" {
-  source              = "./modules/shared_image_gallery/packer"
-  for_each            = try(local.shared_services.packer_mi, {})
-  global_settings     = local.global_settings
-  settings            = each.value
-  resource_group_name = module.resource_groups[each.value.resource_group_key].name
-  location            = lookup(each.value, "region", null) == null ? module.resource_groups[each.value.resource_group_key].location : local.global_settings.regions[each.value.region]
-}
-
 # CAF naming for Resources
 resource "azurecaf_name" "sig_name" {
   for_each      = try(local.shared_services.shared_image_gallery.galleries, {})
@@ -76,8 +67,8 @@ data "template_file" "packer_template" {
   for_each = try(local.shared_services.packer, {})
   template = file(each.value.packer_template_filepath)
   vars = {
-    client_id                         = module.azuread_applications[each.value.azuread_apps_key].azuread_application.application_id
-    client_secret                     = data.azurerm_key_vault_secret.packer_secret[each.key].value
+    client_id                         = try(module.azuread_applications[each.value.azuread_apps_key].azuread_application.application_id, null)
+    client_secret                     = try(data.azurerm_key_vault_secret.packer_secret[each.key].value, null)
     tenant_id                         = data.azurerm_client_config.current.tenant_id
     subscription_id                   = data.azurerm_subscription.primary.subscription_id
     os_type                           = each.value.os_type

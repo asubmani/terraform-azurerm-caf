@@ -169,6 +169,3 @@ variable keyvault_access_policies_azuread_apps {
 variable azuread_apps {
   default = {}
 }
-variable packer_mi {
-  default = {}
-}
