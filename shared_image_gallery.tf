@@ -69,8 +69,8 @@ data "template_file" "packer_template" {
   vars = {
     client_id                         = try(module.azuread_applications[each.value.azuread_apps_key].azuread_application.application_id, null)
     client_secret                     = try(data.azurerm_key_vault_secret.packer_secret[each.key].value, null)
-    tenant_id                         = data.azurerm_client_config.current.tenant_id
-    subscription_id                   = data.azurerm_subscription.primary.subscription_id
+    tenant_id                         = try(data.azurerm_client_config.current.tenant_id, null)
+    subscription_id                   = try(data.azurerm_subscription.primary.subscription_id, null)
     os_type                           = each.value.os_type
     image_publisher                   = each.value.image_publisher
     image_offer                       = each.value.image_offer
