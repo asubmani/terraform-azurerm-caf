@@ -100,14 +100,15 @@ virtual_machines = {
     virtual_machine_settings = {
       linux = {
         name                            = "packer_vm"
-        size                            = "Standard_F2s"
+        size                            = "Standard_A2_V2"
         admin_username                  = "adminuser"
         disable_password_authentication = true
+        custom_data                     = "./scripts/cloud-init/install-ansible-packer.config"
         zone                            = "1"
         # Value of the nic keys to attach the VM. The first one in the list is the default nic
         network_interface_keys = ["nic0"]
         os_disk = {
-          name                 = "bastion_host-os"
+          name                 = "packer_host-os"
           caching              = "ReadWrite"
           storage_account_type = "Standard_LRS"
         }

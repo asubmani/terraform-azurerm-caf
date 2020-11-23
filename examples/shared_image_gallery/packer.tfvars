@@ -1,6 +1,6 @@
 packer = {
   build1 = {
-    packer_template_filepath      = "./shared_image_gallery/packer/packer_template.json"
+    packer_template_filepath      = "./shared_image_gallery/packer/packer_template_msi.json"
     packer_configuration_filepath = "./shared_image_gallery/packer/packer_config.json"
     image_destroy_script_filepath = "./shared_image_gallery/packer/destroy_image.sh"
     azuread_apps_key              = "packer_client"
